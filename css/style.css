@@ -1,0 +1,28 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+.container {
+}
+
+.map-container {
+}
+
+#map {
+	height: 90vh;
+}
+
+.nav-container {
+	display: flex;
+	justify-content: center;
+}
+.nav {
+	display: flex;
+}
+
+.nav-button {
+	padding: 10px;
+	margin: 5px 25px 10px 25px;
+	border: 1px solid lightblue;
+	cursor: pointer;
+}
+
