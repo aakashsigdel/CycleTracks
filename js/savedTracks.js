@@ -1,27 +1,10 @@
-// Overpass query to fetch cycle tracks
-var QUERY_URL = 'http://overpass-api.de/api/interpreter?data=' + 
-			'(way["highway"="path"](%minLat%,%minLng%,%maxLat%,%maxLng%);' +
-			'way["highway"="track"](%minLat%,%minLng%,%maxLat%,%maxLng%););' +
-			'(._;>;);out body;'
-
-
-// Cycle layers
-var layers;
-// Previously clicked cycle track on Map
-var prevLayer = null;
-// Currently clicked layer
-var currLayer = null;
-// lat lang array of currently selected polyline(Cycle track)
-var currLatLngArr = [];
-// list of all selected trails
-var selectedTrails = [];
-
+var savedTracks = [];
 $(function() {
 	var map = initializeMap();
-	setUpEventHandellers(map);
+	getData(map);
+
 });
 
-// initailze the map
 function initializeMap() {
 	var map = L.map('map').setView([47.507817, -121.739877], 14);
 
@@ -33,23 +16,33 @@ function initializeMap() {
 	return map;
 }
 
-// make query with bounding box
-function getQuery(query, replacement) {
-	query = query.replace(/%\w+%/g, function(all) {
-		return replacement[all] || all;
+var trail = null;
+function getData(map) {
+	var myDataRef = new Firebase('https://cycletracks.firebaseio.com/');
+	myDataRef.on('value', function(snapshot) {
+		snapshot.forEach(function(item){
+			savedTracks.push(item.val());
+			$('.saved-tracks').append(
+				'<div class="track-name">' + item.val().name + '</div>'
+			);
+		});
+
+		$('.track-name').click(function(e) {
+			if(trail !== null)
+				map.removeLayer(trail);
+			for(var i = 0; i < savedTracks.length; i++) {
+				if(this.innerHTML === savedTracks[i].name) {
+					trail = L.polyline(savedTracks[i].points, {color: 'red'}).addTo(map);
+					map.fitBounds(trail.getBounds());
+					break;
+				}
+			}
+			getElevationAndDistance(trail.getLatLngs());
+		});
 	});
-	return query;
 }
 
 function getElevationAndDistance(trackPoints) {
-	if(selectedTrails.length > 1) {
-		$('.details>.elevation>.value')
-			.html('More than one trail selected');
-		$('.details>.distance>.value')
-			.html('');
-
-		return;
-	}
 	var ELEVATION_URL = 'http://open.mapquestapi.com/elevation/v1/profile?key=%api_key%' + 
 			'&shapeFormat=raw&latLngCollection=%point_data%';
 	var pointData = (() => {
@@ -73,8 +66,6 @@ function getElevationAndDistance(trackPoints) {
 		.html('');
 
 	$.get(query, function(data) {
-		if(selectedTrails.length > 1)
-			return;
 		var cluElevationAndDistance = getCluElevationAndDistance(data.elevationProfile);
 		$('.details>.elevation>.value')
 			.html(cluElevationAndDistance.cluElevation + ' meters');
@@ -104,22 +95,9 @@ function getCluElevationAndDistance(elevationData) {
 	return cluElevationAndDistance;
 }
 
-$('.save-tracks-btn').click(function() {
-	console.log(selectedTrails.length);
-	if(selectedTrails.length > 0) {
-		var myDataRef = new Firebase('https://cycletracks.firebaseio.com/');
-		selectedTrails.forEach(function(trail) {
-			myDataRef.push({name: trail.layer.feature.tags.name, points: trail.layer.getLatLngs()});
-		});
-		console.log(myDataRef);
-	}
-});
-
-function getBoundReplacements(map) {
-	return {
-		"%minLat%": map.getBounds()._southWest.lat,
-		"%minLng%":  map.getBounds()._southWest.lng,
-		"%maxLat%": map.getBounds()._northEast.lat,
-		"%maxLng%": map.getBounds()._northEast.lng
-	};
+function getQuery(query, replacement) {
+	query = query.replace(/%\w+%/g, function(all) {
+		return replacement[all] || all;
+	});
+	return query;
 }

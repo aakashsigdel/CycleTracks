@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Cycle Traks</title>
-	<link rel="stylesheet" href="./css/style.css" />
+	<title>CycleTracks - Saved Tracks</title>
+	<link rel="stylesheet" href="./css/saveTracks.css" />
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
-
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
-	<script src='./libs/leaflet-osm.js'></script>
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 </head>
 <body>
 	<div class="container">
 		<div class="nav-container">
 			<div class="nav">
-				<div class="home nav-button">Home</div>
-				<div class="saved-tracks nav-button"><a href="savedTracks.html">Saved Tracks</a></div>
+				<div class="home nav-button"><a href="index.html">Home</a></div>
+				<div class="nav-button">Saved Tracks</div>
 			</div>
 		</div>
-		<div class="save-tracks-btn">Save Tracks</div>
+		<div class="saved-tracks"></div>
 		<div class="map-container">
 			<div id="map"></div>
 		</div>
@@ -34,7 +32,6 @@
 			</div>
 		</div>
 	</div>
-	<script src="./js/main.js"></script>
-	<script src="./js/mapevents.js"></script>
+	<script src="./js/savedTracks.js"></script>
 </body>
 </html>

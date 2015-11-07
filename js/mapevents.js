@@ -41,39 +41,51 @@ function onPan(map) {
 	}
 }
 
-var previous = null;
+var previous = [];
 var previousClicked = null;
 function getDataAndSetOnClick(query, map) {
 	$.get(query, function(data) {
 		if(layers) {
 			layers.eachLayer(function(item) {
 				if(item.options.color === 'red') {
-					previous = item;
+					previous.push(item);
 				}
 			});
 			layers.clearLayers();
 		}
 		layers =  new L.OSM.DataLayer(data).addTo(map);
-		if(previous !== null) {
+		if(previous.length !== 0) {
 			layers.eachLayer(function(item) {
-				if(item.feature.id === previous.feature.id) {
-					item.setStyle({ color: 'red' });
-					previousClicked = {};
-					previousClicked.layer = item;
-				}
-			})
+				previous.forEach(function(entry) {
+					if(item.feature.id === entry.feature.id) {
+						item.setStyle({ color: 'red' });
+						previousClicked = {};
+						previousClicked.layer = item;
+					}
+				});
+			});
 		}
 		layers.on('click', function(layer) {
 			currLayer = layer;
+			var duplicateFlag = false;
+			for(var i = 0; i < selectedTrails.length; i++) {
+				if(selectedTrails[i].layer.feature.id === layer.layer.feature.id) {
+					duplicateFlag = true;
+					break;
+				}
+			}
+			if(!duplicateFlag)
+				selectedTrails.push(layer);
 			// lat lng array of polyline points
 			currLatLngArr = L.polyline(currLayer.layer._latlngs).getLatLngs();
-			if(previous !== null)
-				previous.setStyle({ color: 'blue' });
+			if(previous.length !== 0);
+				//previous.setStyle({ color: 'blue' });
 			layer.layer.setStyle({ color: 'red' });
 			if(previousClicked !== null)
-				previousClicked.layer.setStyle({ color: 'blue' });
+				//previousClicked.layer.setStyle({ color: 'blue' });
 			previousClicked = layer;
 			getElevationAndDistance(currLatLngArr);
+			console.log(selectedTrails);
 		});
 	});
 }

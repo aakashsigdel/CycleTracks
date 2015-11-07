@@ -1,15 +1,43 @@
 body {
-	font-family: 'Open Sans', sans-serif;
+	font-family: "RobotoDraft","Roboto",sans-serif;
 }
 .container {
-	position: relative;
+	width: 100vw;
+	height: 100vh;
+}
+
+.saved-tracks {
+	display: inline-block;
+	width: 20vw;
+	height: 80vh;
+	border-right: 2px solid red;
+	overflow: auto;
 }
 
 .map-container {
+	display: inline-block;
+	width: 70vw;
+	height: 80vh;
 }
 
 #map {
 	height: 80vh;
+}
+
+.track-name {
+	padding: 20px 5px;
+	margin-bottom: 15px;
+	text-align: center;
+	box-shadow: 1px 1px 1px grey;
+	background: #2196F3;
+	color: white;
+	font-size: 0.8em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.track-name:active {
+	background: #03A9F4;
 }
 
 .nav-container {
@@ -27,28 +55,9 @@ body {
 	cursor: pointer;
 }
 
-.save-tracks-btn {
-	position: absolute;
-	z-index: 5000;
-	left: 5%;
-	top: 15%;
-	background-color: #FF5722;
-	padding: 8px;
-	box-shadow: 2px 2px 2px #9E9E9E;
-	cursor: pointer;
-}
-
-.save-tracks-btn:hover {
-	background-color: #F44336;
-}
-
-.save-tracks-btn:active {
-	background-color: #FF5722;
-}
-
 .details {
 	margin-top: 10px;
-	margin-left: 40px;
+	margin-left: 20vw;
 }
 
 .elevation {
