@@ -111,7 +111,10 @@ $('.save-tracks-btn').click(function() {
 		selectedTrails.forEach(function(trail) {
 			myDataRef.push({name: trail.layer.feature.tags.name, points: trail.layer.getLatLngs()});
 		});
-		console.log(myDataRef);
+		$('.save-info').html('The trails has been saved');
+		setTimeout(function() {
+			$('.save-info').html('');
+		}, 2000);
 	}
 });
 
