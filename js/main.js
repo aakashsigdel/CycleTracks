@@ -109,7 +109,10 @@ $('.save-tracks-btn').click(function() {
 	if(selectedTrails.length > 0) {
 		var myDataRef = new Firebase('https://cycletracks.firebaseio.com/');
 		selectedTrails.forEach(function(trail) {
-			myDataRef.push({name: trail.layer.feature.tags.name, points: trail.layer.getLatLngs()});
+			myDataRef.child(trail.layer.feature.id).set({
+				name: trail.layer.feature.tags.name, 
+				points: trail.layer.getLatLngs()
+			});
 		});
 		$('.save-info').html('The trails has been saved');
 		setTimeout(function() {
@@ -119,6 +122,7 @@ $('.save-tracks-btn').click(function() {
 });
 
 $('.clear-tracks-btn').click(function() {
+	selectedTrails = [];
 	if(selectedTrails.length > 0) {
 		layers.eachLayer(function(layer) {
 			layer.setStyle({ color: 'blue' });
