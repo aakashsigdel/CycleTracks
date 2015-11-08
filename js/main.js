@@ -118,6 +118,19 @@ $('.save-tracks-btn').click(function() {
 	}
 });
 
+$('.clear-tracks-btn').click(function() {
+	if(selectedTrails.length > 0) {
+		layers.eachLayer(function(layer) {
+			layer.setStyle({ color: 'blue' });
+		});
+		selectedTrails = [];
+		$('.details>.elevation>.value')
+			.html('');
+		$('.details>.distance>.value')
+			.html('');
+	}
+});
+
 function getBoundReplacements(map) {
 	return {
 		"%minLat%": map.getBounds()._southWest.lat,
